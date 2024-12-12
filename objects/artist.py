@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-@dataclass(frozen = True)
+
+@dataclass(frozen=True)
 class Artist:
-	id: str
-	name: str
+    id: str
+    name: str

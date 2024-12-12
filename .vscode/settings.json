@@ -3,5 +3,5 @@
     "files.insertFinalNewline": true,
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.inlayHints.functionReturnTypes": false,
-    "editor.insertSpaces": false
+    "editor.insertSpaces": true
 }
