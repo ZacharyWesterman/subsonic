@@ -21,13 +21,20 @@ class Playlist:
     _stream: Callable[[str], str] = field(repr=False)
 
     changed: Optional[str] = None
+    entry: Optional[list] = None
 
     @cached_property
     def songs(self) -> list[Song]:
-        items = self._query('getMusicDirectory', {
-            'id': self.id,
-        }).get('directory', {}).get('child', [])
+        if not self.entry:
+            items = self._query('getPlaylist', {'id': self.id}).get(
+                'playlist', {}).get('entry', [])
+        else:
+            items = self.entry
 
-        print(items)
-
-        return [Song(**i, _stream=self._stream) for i in items]
+        return [
+            Song(
+                **i,
+                _stream=self._stream
+            )
+            for i in items
+        ]

@@ -21,16 +21,18 @@ class Song:
     playCount: int
     created: datetime
     albumId: str
-    artistId: str
     type: str
 
     _stream: Callable[[str], str] = field(repr=False)
 
     artist: Optional[str] = None
+    artistId: Optional[str] = None
     track: Optional[int] = None
     year: Optional[int] = None
     genre: Optional[str] = None
     discNumber: Optional[int] = None
+    transcodedContentType: Optional[str] = None
+    transcodedSuffix: Optional[str] = None
 
     @property
     def uri(self) -> str:
