@@ -9,10 +9,6 @@ class Song:
 	isDir: bool
 	title: str
 	album: str
-	artist: Optional[str]
-	track: Optional[int]
-	year: Optional[int]
-	genre: Optional[str]
 	coverArt: str
 	size: int
 	contentType: str
@@ -22,13 +18,18 @@ class Song:
 	path: str
 	isVideo: bool
 	playCount: int
-	discNumber: Optional[int]
 	created: datetime
 	albumId: str
 	artistId: str
 	type: str
 
 	_stream: Callable[[str], str] = field(repr = False)
+
+	artist: Optional[str] = None
+	track: Optional[int] = None
+	year: Optional[int] = None
+	genre: Optional[str] = None
+	discNumber: Optional[int] = None
 
 	@property
 	def uri(self) -> str:

@@ -14,11 +14,12 @@ class Playlist:
 	songCount: int
 	duration: int
 	created: str
-	changed: Optional[str]
 	coverArt: str
 
 	_query: Callable = field(repr = False)
 	_stream: Callable[[str], str] = field(repr = False)
+
+	changed: Optional[str] = None
 
 	@cached_property
 	def songs(self) -> list[Song]:

@@ -11,15 +11,16 @@ class Album:
 	isDir: bool
 	title: str
 	album: str
-	artist: Optional[str]
-	year: Optional[int]
-	genre: Optional[str]
-	coverArt: str
 	playCount: int
 	created: str
 
 	_query: Callable = field(repr = False)
 	_stream: Callable[[str], str] = field(repr = False)
+
+	artist: Optional[str] = None
+	year: Optional[int] = None
+	genre: Optional[str] = None
+	coverArt: Optional[str] = None
 
 	@cached_property
 	def songs(self) -> list[Song]:

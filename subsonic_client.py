@@ -99,3 +99,34 @@ class SubsonicClient:
 				return i
 
 		return None
+
+	@cached_property
+	def license(self) -> str:
+		return self.query('getLicense').get('license', '')
+	
+	@cached_property
+	def folders(self) -> dict[str,str]:
+		items = self.query('getMusicFolders').get('musicFolders', {}).get('musicFolder', [])
+
+		return {
+			i['name']: i['id'] for i in items
+		}
+
+	@lru_cache
+	def albums(self, folder: str, page: int, count: int = 40) -> list:
+		folder_id = self.folders.get(folder)
+		if folder_id is None:
+			raise ResponseError(f'Folder "{folder}" does not exist.')
+		
+		items = self.query('getAlbumList', {
+			'type': 'alphabeticalByName',
+			'size': count,
+			'offset': page * count,
+			'musicFolderId': folder_id,
+		}).get('albumList', {}).get('album', [])
+
+		return [Album(
+			**i,
+			_query = _get_subsonic_query_func(self.connection_uri, self.rest_params),
+			_stream = _get_subsonic_stream_link_func(self.connection_uri, self.rest_params)
+		) for i in items]
