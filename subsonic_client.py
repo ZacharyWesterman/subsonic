@@ -1,5 +1,5 @@
 import random, hashlib, requests, urllib, json
-from functools import lru_cache
+from functools import lru_cache, cached_property
 from typing import Callable
 
 from .exceptions import *
@@ -37,6 +37,12 @@ def _get_subsonic_query_func(connection_uri: str, rest_params: str) -> Callable:
 		
 	return query
 
+def _get_subsonic_stream_link_func(connection_uri: str, rest_params: str) -> Callable:
+	def query(song_id: str) -> str:
+		return f'{connection_uri}/rest/stream?id={song_id}&{rest_params}'
+	
+	return query
+
 class SubsonicClient:
 	def __init__(self, host: str, username: str, password: str, *, client: str = 'subsonic-py', version: str = '1.15.0') -> None:
 		salt = ('%32x' % random.randrange(16**32)).strip() #random 32 digit hex string
@@ -58,6 +64,7 @@ class SubsonicClient:
 		except ConnectionError:
 			return Ping('failed', 'unknown', 'unknown')
 
+	@lru_cache
 	def search(self, text: str, *, artist_count: int|None = None, artist_offset: int|None = None, album_count: int|None = None, album_offset: int|None = None, song_count: int|None = None, song_offset: int|None = None, music_folder_id: int|None = None) -> SearchResults:
 		data = self.query('search2', {
 			'query': text,
@@ -72,5 +79,23 @@ class SubsonicClient:
 
 		return SearchResults(
 			**data,
-			query = _get_subsonic_query_func(self.connection_uri, self.rest_params)
+			query = _get_subsonic_query_func(self.connection_uri, self.rest_params),
+			stream = _get_subsonic_stream_link_func(self.connection_uri, self.rest_params)
 		)
+
+	@cached_property
+	def playlists(self) -> list[Playlist]:
+		items = self.query('getPlaylists').get('playlists', {}).get('playlist', [])
+
+		return [Playlist(
+			**i,
+			_query = _get_subsonic_query_func(self.connection_uri, self.rest_params),
+			_stream = _get_subsonic_stream_link_func(self.connection_uri, self.rest_params)
+		) for i in items]
+
+	def playlist(self, name: str) -> Playlist|None:
+		for i in self.playlists:
+			if i.name == name:
+				return i
+
+		return None

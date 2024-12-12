@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Optional, Callable
 from datetime import datetime
 
 @dataclass(frozen = True)
@@ -27,3 +27,9 @@ class Song:
 	albumId: str
 	artistId: str
 	type: str
+
+	_stream: Callable[[str], str] = field(repr = False)
+
+	@property
+	def uri(self) -> str:
+		return self._stream(self.id)
