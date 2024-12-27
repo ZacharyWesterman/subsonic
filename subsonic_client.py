@@ -47,10 +47,7 @@ def _get_subsonic_query_func(connection_uri: str, rest_params: str) -> Callable:
 
 
 def _get_subsonic_stream_link_func(connection_uri: str, rest_params: str) -> Callable:
-    def query(song_id: str) -> str:
-        return f'{connection_uri}/rest/stream?id={song_id}&{rest_params}'
-
-    return query
+    return lambda song_id: f'{connection_uri}/rest/stream?id={song_id}&{rest_params}'
 
 
 class SubsonicClient:

@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Optional, Callable
-from functools import cached_property
+from functools import cached_property, cache
 
 from .song import Song
+
+_album_art_cache: dict[str, str] = {}
 
 
 @dataclass(frozen=True)
@@ -30,3 +32,15 @@ class Album:
         }).get('directory', {}).get('child', [])
 
         return [Song(**i, _stream=self._stream) for i in items]
+
+    @property
+    def cover(self) -> str:
+        if self.coverArt and self.coverArt not in _album_art_cache:
+            data = self._query('getCoverArt', {
+                'id': self.id,
+                'size': 160,
+            })
+
+            _album_art_cache[self.coverArt] = data.get('coverArt', '')
+
+        return _album_art_cache.get(self.coverArt, '')
