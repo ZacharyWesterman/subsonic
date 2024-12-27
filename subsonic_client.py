@@ -155,15 +155,16 @@ class SubsonicClient:
             ) for i in items]
 
     @lru_cache
-    def album(self, album_id: str) -> Album:
-        data = self.query('getAlbum', {
+    def album_songs(self, album_id: str) -> list[Song]:
+        data = self.query('getMusicDirectory', {
             'id': album_id,
-        }).get('album')
+        }).get('directory', {}).get('child', [])
 
-        return Album(
-            **data,
-            _query=_get_subsonic_query_func(
-                self.connection_uri, self.rest_params),
-            _stream=_get_subsonic_stream_link_func(
-                self.connection_uri, self.rest_params)
-        )
+        return [
+            Song(
+                **i,
+                _stream=_get_subsonic_stream_link_func(
+                    self.connection_uri, self.rest_params)
+            )
+            for i in data
+        ]
