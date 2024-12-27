@@ -39,7 +39,7 @@ class Album:
             data = self._query('getCoverArt', {
                 'id': self.id,
                 'size': 160,
-            })
+            }, process=False)
 
             _album_art_cache[self.coverArt] = data.get('coverArt', '')
 
