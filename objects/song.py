@@ -10,7 +10,6 @@ class Song:
     isDir: bool
     title: str
     album: str
-    coverArt: str
     size: int
     contentType: str
     suffix: str
@@ -25,6 +24,7 @@ class Song:
 
     _stream: Callable[[str], str] = field(repr=False)
 
+    coverArt: Optional[str] = None
     artist: Optional[str] = None
     artistId: Optional[str] = None
     track: Optional[int] = None
