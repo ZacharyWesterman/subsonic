@@ -10,19 +10,20 @@ class Song:
     isDir: bool
     title: str
     album: str
-    size: int
-    contentType: str
-    suffix: str
-    duration: int
-    bitRate: int
-    path: str
-    isVideo: bool
     playCount: int
     created: datetime
-    albumId: str
-    type: str
 
     _stream: Callable[[str], str] = field(repr=False)
+
+    size: int = 0
+    contentType: str = ''
+    suffix: str = ''
+    duration: int = 0
+    bitRate: int = 0
+    path: str = ''
+    isVideo: bool = False
+    albumId: str = 0
+    type: str = 'music'
 
     coverArt: Optional[str] = None
     artist: Optional[str] = None
