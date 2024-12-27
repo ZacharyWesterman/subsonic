@@ -3,6 +3,7 @@ import hashlib
 import requests
 import urllib
 import json
+import base64
 from functools import lru_cache, cached_property
 from typing import Callable
 
@@ -168,3 +169,12 @@ class SubsonicClient:
             )
             for i in data
         ]
+
+    @lru_cache
+    def cover_art(self, cover_art_id: str) -> str:
+        data = self.query('getCoverArt', {
+            'id': cover_art_id,
+            'size': 160,
+        }, process=False)
+
+        return base64.b64encode(data).decode()

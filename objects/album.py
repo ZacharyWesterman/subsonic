@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Callable
-from functools import cached_property, cache
+from functools import cached_property
+import base64
 
 from .song import Song
 
@@ -41,6 +42,6 @@ class Album:
                 'size': 160,
             }, process=False)
 
-            _album_art_cache[self.coverArt] = data.get('coverArt', '')
+            _album_art_cache[self.coverArt] = base64.b64encode(data).decode()
 
         return _album_art_cache.get(self.coverArt, '')
