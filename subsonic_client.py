@@ -86,6 +86,10 @@ class SubsonicClient:
             'musicFolderId': music_folder_id,
         }).get('searchResult2')
 
+        for i in ['song', 'album', 'artist']:
+            if i not in data:
+                data[i] = {}
+
         return SearchResults(
             **data,
             query=_get_subsonic_query_func(
