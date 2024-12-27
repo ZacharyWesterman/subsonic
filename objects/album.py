@@ -25,6 +25,7 @@ class Album:
     year: Optional[int] = None
     genre: Optional[str] = None
     coverArt: Optional[str] = None
+    averageRating: Optional[float] = None
 
     @cached_property
     def songs(self) -> list[Song]:
