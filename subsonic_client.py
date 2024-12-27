@@ -61,8 +61,7 @@ class SubsonicClient:
         # however, if the encoder is MD5, pass in the md5sum to this function, NOT the plaintext password!
         md5sum = hashlib.md5((password + salt).encode('utf-8')).hexdigest()
 
-        self.rest_params = f'u={username}&t={md5sum}&s={
-            salt}&c={client}&v={version}&f=json'
+        self.rest_params = f'u={username}&t={md5sum}&s={salt}&c={client}&v={version}&f=json'
         self.connection_uri = host
 
     def query(self, action, parameters: dict = {}, *, process: bool = True) -> str | dict:
