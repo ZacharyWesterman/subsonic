@@ -34,6 +34,7 @@ class Song:
     discNumber: Optional[int] = None
     transcodedContentType: Optional[str] = None
     transcodedSuffix: Optional[str] = None
+    averageRating: Optional[str] = None
 
     @property
     def uri(self) -> str:
