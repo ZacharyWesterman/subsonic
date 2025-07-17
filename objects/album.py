@@ -11,7 +11,6 @@ _album_art_cache: dict[str, str] = {}
 @dataclass(frozen=True)
 class Album:
     id: str
-    parent: str
     isDir: bool
     title: str
     album: str
@@ -26,6 +25,7 @@ class Album:
     genre: Optional[str] = None
     coverArt: Optional[str] = None
     averageRating: Optional[float] = None
+    parent: Optional[str] = None
 
     @cached_property
     def songs(self) -> list[Song]:
