@@ -15,7 +15,7 @@ from .objects import Album, Ping, Playlist, SearchResults, Song
 
 
 def _get_subsonic_query_func(connection_uri: str, rest_params: str) -> Callable:
-    def query(action: str, parameters: dict | None = None, *, process: bool = True) -> str | dict:
+    def query(action: str, parameters: dict | None = None, *, process: bool = True) -> bytes | dict:
 
         url = f'{connection_uri}/rest/{action}.view?{rest_params}'
         if parameters:
@@ -35,7 +35,7 @@ def _get_subsonic_query_func(connection_uri: str, rest_params: str) -> Callable:
                 f'Failed to connect to server (code {res.status_code})')
 
         if not process:
-            return res.content.decode()
+            return res.content
 
         data = json.loads(res.text)
 
@@ -141,7 +141,7 @@ class SubsonicClient:
         parameters: dict | None = None,
         *,
         process: bool = True
-    ) -> str | dict[str, Any]:
+    ) -> bytes | dict[str, Any]:
         """
         Executes a query against the Subsonic API.
         Args:
@@ -149,7 +149,7 @@ class SubsonicClient:
             parameters (dict, optional): Parameters to include in the query. Defaults to None.
             process (bool, optional): Whether to process the response. Defaults to True.
         Returns:
-            str | dict: The response from the API, either as a raw string or a processed dictionary.
+            bytes | dict: The response from the API, either as a raw string or a processed dictionary.
         """
         return _get_subsonic_query_func(
             self.connection_uri,
